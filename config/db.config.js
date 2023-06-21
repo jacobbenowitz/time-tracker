@@ -4,21 +4,20 @@ const logger = require('../logger/logger');
 const connect = () => {
 
   const hostName = process.env.HOST;
-  const userName = process.env.USER;
+  const userName = process.env.USERNAME;
   const password = process.env.PASSWORD;
-  const database = process.env.DB;
+  const database = process.env.DATABASE;
   const dialect = process.env.DIALECT;
 
   const sequelize = new Sequelize(database, userName, password, {
     host: hostName,
     dialect: dialect,
-    operatorsAliases: false,
-    pool: {
-      max: 10,
-      min: 0,
-      acquire: 20000,
-      idle: 5000
-    }
+  });
+
+  sequelize.authenticate().then(() => {
+    logger.info('Connection has been established successfully.');
+  }).catch((error) => {
+    logger.error('Unable to connect to the database: ' + error);
   });
 
   const db = {};

@@ -9,9 +9,9 @@ class UserRepository {
   constructor() {
     this.db = connect();
     // For Development
-    // this.db.sequelize.sync({ force: true }).then(() => {
-    //   logger.info("Dropped table and db sync completed.");
-    // });
+    this.db.sequelize.sync().then(() => {
+      logger.info("Sync completed.");
+    });
   }
 
   async getUsers() {
