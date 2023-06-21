@@ -5,6 +5,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const logger = require('./logger/logger');
 const tasks = require('./routes/api/tasks');
+const users = require('./routes/api/users');
 
 // express app initialization
 const app = express();
@@ -16,7 +17,8 @@ app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // routes
-app.use('/api/tasks', tasks)
+app.use('/api/tasks', tasks);
+app.use('/api/users', users);
 
 app.get('/', (req, res) => {
   res.send(`<h1>Hello world!</h1>`)

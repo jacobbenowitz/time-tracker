@@ -20,7 +20,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  logger.info("create task payload: " + req.body);
+  logger.info("create task payload: ", req.body);
   return await taskService.createTask(req.body.task).then(data =>
     res.json(data)
   );

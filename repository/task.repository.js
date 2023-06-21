@@ -10,7 +10,7 @@ class TaskRepository {
     this.db = connect();
     // For Development
     // this.db.sequelize.sync({ force: true }).then(() => {
-    //   log.info("Dropped table and db sync completed.");
+    //   logger.info("Dropped table and db sync completed.");
     // });
   }
 

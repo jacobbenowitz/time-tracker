@@ -1,4 +1,4 @@
-const usersRepository = require('../../repository/user.repository');
+const usersRepository = require('../repository/user.repository');
 
 class UserService {
   constructor() { }
@@ -9,6 +9,10 @@ class UserService {
 
   async getUser(userId) {
     return await usersRepository.getUser(userId);
+  }
+
+  async getUserByEmail(email) {
+    return await usersRepository.getUserByEmail(email);
   }
 
   async createUser(user) {

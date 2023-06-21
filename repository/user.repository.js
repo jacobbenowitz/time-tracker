@@ -10,7 +10,7 @@ class UserRepository {
     this.db = connect();
     // For Development
     // this.db.sequelize.sync({ force: true }).then(() => {
-    //   log.info("Dropped table and db sync completed.");
+    //   logger.info("Dropped table and db sync completed.");
     // });
   }
 
@@ -34,6 +34,19 @@ class UserRepository {
       return user;
     } catch (err) {
       logger.error(`error finding user by id ${userId}, error: ` + err);
+      return [];
+    }
+  }
+
+  async getUserByEmail(email) {
+    try {
+      const user = await this.db.users.findOne({
+        where: { email: email }
+      });
+      logger.info('found user: ', user);
+      return user;
+    } catch (err) {
+      logger.error(`error finding user by email ${email}, error: ` + err);
       return [];
     }
   }
