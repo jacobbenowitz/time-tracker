@@ -3,43 +3,26 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-const taskController = require('./controller/task.controller');
 const logger = require('./logger/logger');
+const tasks = require('./routes/api/tasks');
 
 // express app initialization
 const app = express();
 const port = process.env.PORT || 3000;
 
 // middleware
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // routes
-app.get('/api/tasks', (req, res) => {
-  taskController.getTasks().then(data => res.json(data));
-});
-
-app.get('/api/tasks/:id', (req, res) => {
-  taskController.getTask(req.params.id).then(data => res.json(data));
-});
-
-app.post('/api/task', (req, res) => {
-  logger.info("create task payload: " + req.body);
-  taskController.createTask(req.body.task).then(data => res.json(data));
-});
-
-app.put('/api/task', (req, res) => {
-  taskController.updateTask(req.body.task).then(data => res.json(data));
-});
-
-app.delete('/api/task/:id', (req, res) => {
-  taskController.deleteTask(req.params.id).then(data => res.json(data));
-});
+app.use('/api/tasks', tasks)
 
 app.get('/', (req, res) => {
   res.send(`<h1>Hello world!</h1>`)
 });
 
+// listen for requests
 app.listen(port, () => {
   logger.info(`Server listening on the port  ${port}`);
 })
