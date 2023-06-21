@@ -19,7 +19,7 @@ app.get('/api/tasks', (req, res) => {
 });
 
 app.post('/api/task', (req, res) => {
-  console.log(req.body);
+  logger.info("create task payload: " + req.body);
   taskController.createTask(req.body.task).then(data => res.json(data));
 });
 
@@ -36,5 +36,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server listening on the port  ${port}`);
+  log.info(`Server listening on the port  ${port}`);
 })

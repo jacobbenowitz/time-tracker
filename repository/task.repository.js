@@ -10,17 +10,17 @@ class TaskRepository {
     this.db = connect();
     // For Development
     // this.db.sequelize.sync({ force: true }).then(() => {
-    //   console.log("Dropped table and db sync completed.");
+    //   log.info("Dropped table and db sync completed.");
     // });
   }
 
   async getTasks() {
     try {
       const tasks = await this.db.tasks.findAll();
-      console.log('tasks: ', tasks);
+      logger.info('tasks: ', tasks);
       return tasks;
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       return [];
     }
   }
