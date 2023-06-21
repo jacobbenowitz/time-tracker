@@ -27,7 +27,6 @@ const connect = () => {
   db.tasks = require("../model/task.model")(sequelize, DataTypes, Model);
 
   return db;
-
 }
 
 module.exports = {

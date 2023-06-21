@@ -18,8 +18,8 @@
   "paths": {
     "/tasks": {
       "get": {
-        "summary": "Get all the tasks",
-        "description": "Get all the tasks",
+        "summary": "Get all tasks",
+        "description": "Get all the tasks from the database",
         "produces": ["application/json"],
         "parameters": [],
         "responses": {
@@ -28,7 +28,40 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/todosResponse"
+                "$ref": "#/definitions/tasksResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "summary": "Get a task by id",
+        "description": "Get a task with the provided id",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "task id that needs to be deleted",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tasksResponse"
               }
             }
           },
@@ -70,7 +103,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/todosResponse"
+                "$ref": "#/definitions/tasksResponse"
               }
             }
           },
@@ -118,7 +151,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/todosResponse"
+                "$ref": "#/definitions/tasksResponse"
               }
             }
           },
@@ -151,7 +184,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/todosResponse"
+                "$ref": "#/definitions/tasksResponse"
               }
             }
           },
@@ -166,28 +199,37 @@
     }
   },
   "definitions": {
-    "todosResponse": {
+    "tasksResponse": {
       "type": "object",
       "properties": {
-        "_id": {
+        "id": {
           "type": "integer"
         },
-        "name": {
+        "user_id": {
+          "type": "integer"
+        },
+        "title": {
           "type": "string"
         },
         "description": {
           "type": "string"
         },
-        "createdBy": {
+        "status": {
           "type": "string"
         },
-        "createdAt": {
+        "start_time": {
           "type": "string"
         },
-        "updatedAt": {
+        "end_time": {
           "type": "string"
         },
-        "updatedBy": {
+        "created_at": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_at": {
           "type": "string"
         }
       }
@@ -195,18 +237,35 @@
     "Task": {
       "type": "object",
       "properties": {
-        "task": {
-          "type": {
-            "name": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "createdBy": {
-              "type": "string"
-            }
-          }
+        "id": {
+          "type": "integer"
+        },
+        "user_id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
         }
       }
     },

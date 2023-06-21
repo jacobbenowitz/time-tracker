@@ -1,11 +1,16 @@
 const taskService = require('../service/task.service');
 const logger = require('../logger/logger');
 
-class TodoController {
+class TaskController {
 
   async getTasks() {
     logger.info('Controller: getTasks')
     return await taskService.getTasks();
+  }
+
+  async getTask(taskId) {
+    logger.info('Controller: getTask')
+    return await taskService.getTask(taskId);
   }
 
   async createTask(task) {
@@ -23,4 +28,4 @@ class TodoController {
     return await taskService.deleteTask(taskId);
   }
 }
-module.exports = new TodoController();
+module.exports = new TaskController();

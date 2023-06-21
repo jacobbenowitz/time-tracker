@@ -20,7 +20,20 @@ class TaskRepository {
       logger.info('tasks: ', tasks);
       return tasks;
     } catch (err) {
-      logger.error(err);
+      logger.error('Error getting all tasks: ' + err);
+      return [];
+    }
+  }
+
+  async getTask(taskId) {
+    try {
+      const task = await this.db.tasks.findOne({
+        where: { id: taskId }
+      });
+      logger.info('found task: ', task);
+      return task;
+    } catch (err) {
+      logger.error(`error finding task by id ${taskId}, error: ` + err);
       return [];
     }
   }
@@ -33,7 +46,7 @@ class TaskRepository {
       task.updated_at = new Date().toISOString();
       data = await this.db.tasks.create(task);
     } catch (err) {
-      logger.error('Error: ' + err);
+      logger.error('Error creating task: ' + err);
     }
     return data;
   }
@@ -42,13 +55,16 @@ class TaskRepository {
     let data = {};
     try {
       task.updated_at = new Date().toISOString();
-      data = await this.db.tasks.update({ ...task }, {
+      await this.db.tasks.update({ ...task }, {
         where: {
           id: task.id
         }
       });
+      data = await this.db.tasks.findOne({
+        where: { id: task.id }
+      });
     } catch (err) {
-      logger.error('Error::' + err);
+      logger.error('Error updating task: ' + err);
     }
     return data;
   }
@@ -62,7 +78,7 @@ class TaskRepository {
         }
       });
     } catch (err) {
-      logger.error('Error::' + err);
+      logger.error('Error deleting task: ' + err);
     }
     return data;
   }

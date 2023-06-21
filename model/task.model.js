@@ -25,12 +25,12 @@ module.exports = (sequelize, DataTypes, Model) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    created_by: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     created_at: {
       type: DataTypes.DATE,
+      allowNull: false,
+    },
+    created_by: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     updated_at: {
