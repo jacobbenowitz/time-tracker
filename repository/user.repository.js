@@ -51,6 +51,19 @@ class UserRepository {
     }
   }
 
+  async getUserByUsername(username) {
+    try {
+      const user = await this.db.users.findOne({
+        where: { username: username }
+      });
+      logger.info('found user: ', user);
+      return user;
+    } catch (err) {
+      logger.error(`error finding user by username ${username}, error: ` + err);
+      return [];
+    }
+  }
+
   async createUser(user) {
     let data = {};
     try {

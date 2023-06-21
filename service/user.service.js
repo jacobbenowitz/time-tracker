@@ -15,6 +15,10 @@ class UserService {
     return await usersRepository.getUserByEmail(email);
   }
 
+  async getUserByUsername(username) {
+    return await usersRepository.getUserByUsername(username);
+  }
+
   async createUser(user) {
     return await usersRepository.createUser(user);
   }

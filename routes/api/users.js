@@ -1,8 +1,12 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const keys = require('../../keys/keys');
 const express = require("express");
 const router = express.Router();
 const userService = require('../../service/user.service');
 const logger = require('../../logger/logger');
+const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
 
 router.get("/test", (req, res) => res.json({ msg: "This is the users route" }));
 
@@ -24,6 +28,12 @@ router.post('/register', async (req, res) => {
   logger.info("register user payload: ", req.body);
   // ensure nobody registers with duplicate emails
   try {
+    const { errors, isValid } = validateRegisterInput(req.body.user);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     const user = await userService.getUserByEmail(req.body.user.email);
     if (user) {
       return res.status(400).json({ email: "A user has already registered with this address" });
@@ -31,26 +41,76 @@ router.post('/register', async (req, res) => {
       const newUser = {
         email: req.body.user.email,
         username: req.body.user.username,
-        password: req.body.user.password,
+        password_digest: req.body.user.password,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
       await bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, async (err, hash) => {
+        bcrypt.hash(newUser.password_digest, salt, async (err, hash) => {
           if (err) throw err;
-          newUser.password = hash;
-          return await userService.createUser(req.body.user).then(data =>
-            res.json(data)
-          );
-        })
-      });
-
-    }
+          newUser.password_digest = hash;
+          await userService.createUser(newUser)
+          const savedUser = userService.getUserByEmail(newUser.email);
+          const payload = { id: savedUser.id, username: savedUser.username };
+          jwt.sign(
+            payload,
+            keys.secretOrKey,
+            { expiresIn: 3600 },
+            (err, token) => {
+              res.json({
+                success: true,
+                token: "Bearer " + token
+              });
+            });
+        }
+        );
+      })
+    };
   } catch (e) {
     logger.error('error registering user: ' + e);
     res.status(400).json(e);
   }
+});
 
+router.post('/login', async (req, res) => {
+  try {
+    const { errors, isValid } = validateLoginInput(req.body.user);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    const username = req.body.user.username;
+    const password = req.body.user.password;
+    const user = await userService.getUserByUsername(username);
+
+    if (!user) {
+      return res.status(404).json({ username: 'This user does not exist' });
+    } else {
+      bcrypt.compare(password, user.password_digest).then(isMatch => {
+        if (isMatch) {
+          const payload = { id: user.id, username: user.username };
+          // pass jwt token to client
+          jwt.sign(
+            payload,
+            keys.secretOrKey,
+            // Tell the key to expire in one hour
+            { expiresIn: 3600 },
+            (err, token) => {
+              res.json({
+                success: true,
+                token: 'Bearer ' + token
+              });
+            });
+        } else {
+          return res.status(400).json({ password: 'Incorrect password' });
+        }
+      })
+    }
+  } catch (e) {
+    logger.error('error logging in user: ' + e);
+    res.status(400).json(e);
+  }
 });
 
 router.put('/', async (req, res) => {

@@ -8,9 +8,11 @@ module.exports = (sequelize, DataTypes, Model) => {
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     password_digest: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,
