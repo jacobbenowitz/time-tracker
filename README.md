@@ -16,6 +16,7 @@ This is a simple REST server to create time entries and user accounts.
   -  **sequelize**: modern ORM to interact with SQL databases in JavaScript
   -  **swaggerui**: generates interactive API documentation  
   -  **validator**: used to validate data prior to storing in the database
+  -  **node**
 
 <br>
 
@@ -86,7 +87,7 @@ git clone https://github.com/jacobbenowitz/time-tracker.git
 cd time-tracker
 ```
 
-- Create .env file in the root directory with your MySQL credentials 
+- Create a **.env** file in the root directory with your MySQL credentials:
 ```
 HOST=localhost
 USERNAME=<username, likely root>
@@ -95,6 +96,18 @@ DATABASE=timetracker
 DIALECT=mysql
 PORT=3081
 ```
+
+- Create a **keys** directory and file for generating jwt tokens (user auth)
+  - Create the **keys** directory from the root directory
+  - Create a **keys.js** file within the new **keys** directory:
+  ```javascript
+  module.exports = {
+    secretOrKey: '<your secret key here>'
+  }
+  ```
+  - You can insert any random string, or generate a key here: [https://randomkeygen.com/](https://randomkeygen.com/)
+
+<br>
 
 - npm install
 ```
