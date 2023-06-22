@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const logger = require('./logger/logger');
-const tasks = require('./routes/api/tasks');
+const tasks = require('./routes/api/time-entries');
 const users = require('./routes/api/users');
 
 // express app initialization
@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // routes
-app.use('/api/tasks', tasks);
+app.use('/api/time-entries', tasks);
 app.use('/api/users', users);
 
 app.get('/', (req, res) => {

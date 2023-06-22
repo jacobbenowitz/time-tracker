@@ -34,6 +34,7 @@ If you do not have MySQL installed locally, please install the following:
     created_by VARCHAR(50) NOT NULL,
     updated_at TIMESTAMP,
     PRIMARY KEY (id)
+    INDEX (user_id)
   );
 
   -- Ensure table was created
@@ -51,6 +52,7 @@ If you do not have MySQL installed locally, please install the following:
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
+    INDEX(username, email)
   );
 
   -- Ensure table was created

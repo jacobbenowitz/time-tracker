@@ -3,7 +3,7 @@
   "info": {
     "description": "Task Timer backend API documentation",
     "version": "1.0.0",
-    "title": "Tasks API",
+    "title": "Time Entries API",
     "contact": {
       "email": "jacob.benowitz@gmail.com"
     },
@@ -16,10 +16,10 @@
   "host": "localhost:3081",
   "basePath": "/api",
   "paths": {
-    "/tasks": {
+    "/time-entries": {
       "get": {
-        "summary": "Get all tasks",
-        "description": "Get all the tasks from the database",
+        "summary": "Get all time-entries",
+        "description": "Get all the time-entries from the database",
         "produces": ["application/json"],
         "parameters": [],
         "responses": {
@@ -35,22 +35,62 @@
           "400": {
             "description": "Invalid status value",
             "schema": {
-              "$ref": "#/definitions/InvalidResponse"
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create time entry",
+        "description": "Create a new time entry.",
+        "produces": ["application/json"],
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "time-entries object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "task": {
+                  "type": "object",
+                  "$ref": "#/definitions/TaskTemplate"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tasksResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           }
         }
       }
     },
-    "/tasks/{id}": {
+    "/time-entries/{id}": {
       "get": {
-        "summary": "Get a task by id",
-        "description": "Get a task with the provided id",
+        "summary": "Get a time-entry",
+        "description": "Get a time-entry by id",
         "produces": ["application/json"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "task id that needs to be deleted",
+            "description": "time-entry id to be found",
             "required": true,
             "type": "integer"
           }
@@ -68,78 +108,34 @@
           "400": {
             "description": "Invalid status value",
             "schema": {
-              "$ref": "#/definitions/InvalidResponse"
+              "$ref": "#/definitions/Response"
             }
           }
         }
-      }
-    },
-    "/task": {
-      "post": {
-        "summary": "Save the task",
-        "description": "Save the task",
-        "produces": ["application/json"],
-        "consumes": ["application/json"],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "task object",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "task": {
-                  "type": "object",
-                  "$ref": "#/definitions/Task"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/tasksResponse"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid status value",
-            "schema": {
-              "$ref": "#/definitions/InvalidResponse"
-            }
-          }
-        }
-      }
-    },
-    "/task/": {
+      },
       "put": {
-        "summary": "Update the tasks",
-        "description": "Update the tasks",
+        "summary": "Update a time-entry",
+        "description": "Update a time-entry",
         "produces": ["application/json"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "task id that needs to be deleted",
+            "description": "time-entries id to be updated",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "in": "body",
             "name": "body",
-            "description": "task object",
+            "description": "time-entries object",
             "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "task": {
                   "type": "object",
-                  "$ref": "#/definitions/Task"
+                  "$ref": "#/definitions/TaskTemplateUpdate"
                 }
               }
             }
@@ -158,24 +154,22 @@
           "400": {
             "description": "Invalid status value",
             "schema": {
-              "$ref": "#/definitions/InvalidResponse"
+              "$ref": "#/definitions/Response"
             }
           }
         }
-      }
-    },
-    "/task/{id}": {
+      },
       "delete": {
-        "summary": "Delete the task",
-        "description": "Delete the task",
+        "summary": "Delete a time-entry",
+        "description": "Delete a time-entry",
         "produces": ["application/json"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "task id that needs to be deleted",
+            "description": "time-entry id to be deleted",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -191,7 +185,247 @@
           "400": {
             "description": "Invalid status value",
             "schema": {
-              "$ref": "#/definitions/InvalidResponse"
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/time-entries/user/{userId}": {
+      "get": {
+        "summary": "Get all of a user's time entries",
+        "description": "Get all time entries belonging to a user",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user id that owns the time entries",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tasksResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/users/register": {
+      "post": {
+        "summary": "Register a new user",
+        "description": "Register a new user account",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "new user object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "$ref": "#/definitions/UserTemplate"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "User login",
+        "description": "Login existing user account",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "user credentials",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "$ref": "#/definitions/UserCredentials"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Get all users",
+        "description": "Get all user accounts",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a user",
+        "description": "Update a user account",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "user object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "$ref": "#/definitions/UserUpdate"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Get a user",
+        "description": "Get a user by id",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "user id to be found",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserResponse"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a user",
+        "description": "Delete a user by id",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "user id to be deleted",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Valid status",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Response"
             }
           }
         }
@@ -269,7 +503,123 @@
         }
       }
     },
-    "InvalidResponse": {
+    "TaskTemplate": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        }
+      }
+    },
+    "UserTemplate": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "password2": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "UserCredentials": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "UserUpdate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "TaskTemplateUpdate": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "Response": {
       "type": "object",
       "properties": {
         "statusCode": {

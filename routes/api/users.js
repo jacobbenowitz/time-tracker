@@ -31,12 +31,18 @@ router.post('/register', async (req, res) => {
     const { errors, isValid } = validateRegisterInput(req.body.user);
 
     if (!isValid) {
-      return res.status(400).json(errors);
+      return res.status(400).json({
+        statusCode: "VALIDATION_ERROR",
+        message: Object.values(errors).join(', ')
+      });
     }
 
     const user = await userService.getUserByEmail(req.body.user.email);
     if (user) {
-      return res.status(400).json({ email: "A user has already registered with this address" });
+      return res.status(400).json({
+        statusCode: "EMAIL_ALREADY_EXISTS",
+        message: "A user has already registered with this address"
+      });
     } else {
       const newUser = {
         email: req.body.user.email,
@@ -77,7 +83,10 @@ router.post('/login', async (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body.user);
 
     if (!isValid) {
-      return res.status(400).json(errors);
+      return res.status(400).json({
+        statusCode: "VALIDATION_ERROR",
+        message: Object.values(errors).join(', ')
+      });
     }
 
     const username = req.body.user.username;
@@ -85,7 +94,10 @@ router.post('/login', async (req, res) => {
     const user = await userService.getUserByUsername(username);
 
     if (!user) {
-      return res.status(404).json({ username: 'This user does not exist' });
+      return res.status(404).json({
+        statusCode: "USER_NOT_FOUND",
+        message: 'This user does not exist'
+      });
     } else {
       bcrypt.compare(password, user.password_digest).then(isMatch => {
         if (isMatch) {
@@ -103,7 +115,10 @@ router.post('/login', async (req, res) => {
               });
             });
         } else {
-          return res.status(400).json({ password: 'Incorrect password' });
+          return res.status(400).json({
+            statusCode: "INCORRECT_PASSWORD",
+            message: 'Incorrect password'
+          });
         }
       })
     }

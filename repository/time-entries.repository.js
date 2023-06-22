@@ -2,7 +2,7 @@ const { connect } = require('../config/db.config');
 const logger = require('../logger/logger');
 const constants = require('../constants/constants');
 
-class TaskRepository {
+class TimeEntriesRepository {
 
   db = {};
 
@@ -20,7 +20,7 @@ class TaskRepository {
       logger.info('tasks: ', tasks);
       return tasks;
     } catch (err) {
-      logger.error('Error getting all tasks: ' + err);
+      logger.error('error getting all tasks: ' + err);
       return [];
     }
   }
@@ -30,10 +30,23 @@ class TaskRepository {
       const task = await this.db.tasks.findOne({
         where: { id: taskId }
       });
-      logger.info('found task: ', task);
+      logger.info('found time entry: ', task);
       return task;
     } catch (err) {
-      logger.error(`error finding task by id ${taskId}, error: ` + err);
+      logger.error(`error finding time entry by id ${taskId}, error: ` + err);
+      return [];
+    }
+  }
+
+  async getTaskByUser(userId) {
+    try {
+      const task = await this.db.tasks.findOne({
+        where: { user_id: userId }
+      });
+      logger.info('found time entry: ', task);
+      return task;
+    } catch (err) {
+      logger.error(`error finding time entry by id ${userId}, error: ` + err);
       return [];
     }
   }
@@ -46,25 +59,33 @@ class TaskRepository {
       task.updated_at = new Date().toISOString();
       data = await this.db.tasks.create(task);
     } catch (err) {
-      logger.error('Error creating task: ' + err);
+      logger.error('Error creating time entry: ' + err);
+      data = {
+        "statusCode": "ERROR",
+        "message": "Error creating time entry, please check the fields and try again"
+      };
     }
     return data;
   }
 
-  async updateTask(task) {
+  async updateTask(task, taskId) {
     let data = {};
     try {
       task.updated_at = new Date().toISOString();
       await this.db.tasks.update({ ...task }, {
         where: {
-          id: task.id
+          id: taskId
         }
       });
       data = await this.db.tasks.findOne({
-        where: { id: task.id }
+        where: { id: taskId }
       });
     } catch (err) {
       logger.error('Error updating task: ' + err);
+      data = {
+        "statusCode": "ERROR",
+        "message": "Error updating time entry, please check the fields and try again"
+      };
     }
     return data;
   }
@@ -72,17 +93,25 @@ class TaskRepository {
   async deleteTask(taskId) {
     let data = {};
     try {
-      data = await this.db.tasks.destroy({
+      await this.db.tasks.destroy({
         where: {
           id: taskId
         }
       });
+      data = {
+        "statusCode": "SUCCESS",
+        "message": "Time entry deleted successfully"
+      }
     } catch (err) {
       logger.error('Error deleting task: ' + err);
+      data = {
+        "statusCode": "ERROR",
+        "message": "Error deleting time entry, please check the fields and try again"
+      };
     }
     return data;
   }
 
 }
 
-module.exports = new TaskRepository();
+module.exports = new TimeEntriesRepository();

@@ -1,7 +1,7 @@
 const { connect } = require('../config/db.config');
 const logger = require('../logger/logger');
 const constants = require('../constants/constants');
-
+const validateRegisterInput = require('../validation/register');
 class UserRepository {
 
   db = {};
@@ -79,17 +79,44 @@ class UserRepository {
   async updateUser(user) {
     let data = {};
     try {
-      user.updated_at = new Date().toISOString();
-      await this.db.users.update({ ...user }, {
+      const currentUser = await this.db.users.findOne({
+        where: { id: user.id }
+      });
+
+      if (user.password) {
+        user.password2 = user.password;
+      }
+
+      const newUser = {
+        ...currentUser.dataValues,
+        ...user,
+        updated_at: new Date().toISOString()
+      }
+
+      const { errors, isValid } = validateRegisterInput(newUser);
+
+      if (!isValid) {
+        return {
+          statusCode: "VALIDATION_ERROR",
+          message: Object.values(errors).join(', ')
+        };
+      }
+
+      await this.db.users.update(newUser, {
         where: {
           id: user.id
         }
       });
+
       data = await this.db.users.findOne({
         where: { id: user.id }
       });
     } catch (err) {
       logger.error('Error updating user: ' + err);
+      data = {
+        statusCode: "UPDATE_ERROR",
+        message: err
+      };
     }
     return data;
   }
@@ -97,13 +124,21 @@ class UserRepository {
   async deleteUser(userId) {
     let data = {};
     try {
-      data = await this.db.users.destroy({
+      await this.db.users.destroy({
         where: {
           id: userId
         }
       });
+      data = {
+        statusCode: "DELETE_SUCCESS",
+        message: "User deleted successfully"
+      };
     } catch (err) {
       logger.error('Error deleting user: ' + err);
+      data = {
+        statusCode: "DELETE_ERROR",
+        message: err
+      };
     }
     return data;
   }

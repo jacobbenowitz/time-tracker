@@ -1,6 +1,6 @@
-const taskRepository = require('../repository/task.repository');
+const taskRepository = require('../repository/time-entries.repository');
 
-class TaskService {
+class TimeEntriesService {
   constructor() { }
 
   async getTasks() {
@@ -11,12 +11,16 @@ class TaskService {
     return await taskRepository.getTask(taskId);
   }
 
+  async getTaskByUser(userId) {
+    return await taskRepository.getTaskByUser(userId);
+  }
+
   async createTask(task) {
     return await taskRepository.createTask(task);
   }
 
-  async updateTask(task) {
-    return await taskRepository.updateTask(task);
+  async updateTask(task, taskId) {
+    return await taskRepository.updateTask(task, taskId);
   }
 
   async deleteTask(taskId) {
@@ -25,4 +29,4 @@ class TaskService {
 
 }
 
-module.exports = new TaskService();
+module.exports = new TimeEntriesService();
