@@ -9,6 +9,8 @@ This is a simple REST server to create time entries and user accounts.
   -  **express**: node server framework
   -  **jsonwebtoken**: URL-safe Bearer tokens to authenticate user from server and send to clients
   -  **mysql**: driver to interact with MySQL databases
+  -  **MySQL Server**: create MySQL server on your local machine
+  -  **MySQL Workbench**: create the database and tables for the application
   -  **mysql2**: not used because it is not supported by sequelize
   -  **pine**: wrapper of winston logger, used to enhance server logs
   -  **sequelize**: modern ORM to interact with SQL databases in JavaScript
@@ -16,8 +18,6 @@ This is a simple REST server to create time entries and user accounts.
   -  **validator**: used to validate data prior to storing in the database
 
 <br>
-
-___
 
 ## Setup & Run
 
