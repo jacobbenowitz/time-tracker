@@ -49,7 +49,7 @@ If you do not have MySQL installed locally, please install the following:
     created_at TIMESTAMP NOT NULL,
     created_by VARCHAR(50) NOT NULL,
     updated_at TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
     INDEX (user_id)
   );
 
@@ -63,11 +63,11 @@ If you do not have MySQL installed locally, please install the following:
   CREATE TABLE users (
     id BIGINT NOT NULL AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL,
-	  email VARCHAR(320) NOT NULL,
+    email VARCHAR(320) NOT NULL,
     password_digest VARCHAR(100) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
     INDEX(username, email)
   );
 
