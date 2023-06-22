@@ -1,8 +1,23 @@
 # time-tracker
 
 ## Summary
+This is a simple REST server to create time entries and user accounts.
 
 ## Technologies Used
+  -  **bcryptjs**: hash and verify passwords in order to store sensitive information
+  -  **dotenv**: lift .env variables into PROCESS.ENV for use within project
+  -  **express**: node server framework
+  -  **jsonwebtoken**: URL-safe Bearer tokens to authenticate user from server and send to clients
+  -  **mysql**: driver to interact with MySQL databases
+  -  **mysql2**: not used because it is not supported by sequelize
+  -  **pine**: wrapper of winston logger, used to enhance server logs
+  -  **sequelize**: modern ORM to interact with SQL databases in JavaScript
+  -  **swaggerui**: generates interactive API documentation  
+  -  **validator**: used to validate data prior to storing in the database
+
+<br>
+
+___
 
 ## Setup & Run
 
@@ -58,3 +73,65 @@ If you do not have MySQL installed locally, please install the following:
   -- Ensure table was created
   DESCRIBE users;
 ```
+
+<br>
+
+____
+
+### 4. Project setup
+
+- Clone time-tracker
+```
+git clone https://github.com/jacobbenowitz/time-tracker.git
+cd time-tracker
+```
+
+- Create .env file in the root directory with your MySQL credentials 
+```
+HOST=localhost
+USERNAME=<username, likely root>
+PASSWORD=<your password>
+DATABASE=timetracker
+DIALECT=mysql
+PORT=3081
+```
+
+- npm install
+```
+cd time-tracker
+npm install
+```
+
+<br>
+
+___
+
+### 5. Start time-tracker
+- Run the project via npm dev script 
+```
+npm run dev
+```
+
+- Open the Swagger UI API docs in your browser
+
+> **[http://localhost:3081/api-docs/#/](http://localhost:3081/api-docs/#/)**
+
+<br>
+
+___
+
+### 6. How to use Swagger UI
+**Browse all endpoints**
+
+<img src="images/swaggerui_browse.png">
+
+<br>
+
+**Interact with endpoints**
+- Click any endpoint container to expand
+- Click the "Try it out" button
+- If required, fill out the required parameters
+- Click the "Execute" button
+- See the response from the server in the "Responses" section
+
+<img src="images/swaggerui_endpoint.png">
