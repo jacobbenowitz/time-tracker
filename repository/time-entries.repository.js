@@ -1,7 +1,7 @@
 const { connect } = require('../config/db.config');
 const logger = require('../logger/logger');
 const constants = require('../constants/constants');
-
+const validateTimeEntry = require('../validation/time-entry');
 class TimeEntriesRepository {
 
   db = {};
@@ -54,6 +54,27 @@ class TimeEntriesRepository {
   async createTask(task) {
     let data = {};
     try {
+      // validate user id
+      const user = await this.db.users.findOne({
+        where: { id: task.user_id }
+      });
+      if (!user) {
+        logger.info(`invalid user id provided when creating task: ${task.user_id}`);
+        return {
+          "statusCode": "VALIDATION_ERROR",
+          "message": "Invalid user id provided"
+        };
+      }
+      // validate data
+      const { errors, isValid } = validateTimeEntry(task);
+
+      if (!isValid) {
+        return {
+          statusCode: "VALIDATION_ERROR",
+          message: Object.values(errors).join(', ')
+        };
+      }
+
       task.created_at = new Date().toISOString();
       task.created_by = constants.BACKEND_USER;
       task.updated_at = new Date().toISOString();
