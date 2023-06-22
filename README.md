@@ -109,9 +109,8 @@ PORT=3081
 
 <br>
 
-- npm install
+- Install node packages
 ```
-cd time-tracker
 npm install
 ```
 

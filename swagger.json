@@ -318,7 +318,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/UserResponse"
+                "$ref": "#/definitions/User"
               }
             }
           },
@@ -357,7 +357,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/UserResponse"
+                "$ref": "#/definitions/User"
               }
             }
           },
@@ -390,7 +390,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/UserResponse"
+                "$ref": "#/definitions/User"
               }
             }
           },

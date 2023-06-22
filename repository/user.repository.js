@@ -30,8 +30,15 @@ class UserRepository {
       const user = await this.db.users.findOne({
         where: { id: userId }
       });
-      logger.info('found user: ', user);
-      return user;
+      if (user !== null) {
+        logger.info('found user: ', user);
+        return user;
+      } else {
+        return {
+          statusCode: 'USER_NOT_FOUND',
+          message: 'No user found with that id'
+        };
+      }
     } catch (err) {
       logger.error(`error finding user by id ${userId}, error: ` + err);
       return [];
@@ -85,6 +92,9 @@ class UserRepository {
 
       if (user.password) {
         user.password2 = user.password;
+      } else {
+        user.password = currentUser.dataValues.password_digest;
+        user.password2 = currentUser.dataValues.password_digest;
       }
 
       const newUser = {
