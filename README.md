@@ -16,7 +16,7 @@ This is a simple REST server to create time entries and user accounts.
   -  **sequelize**: modern ORM to interact with SQL databases in JavaScript
   -  **swaggerui**: generates interactive API documentation  
   -  **validator**: used to validate data prior to storing in the database
-  -  **node**
+  -  **Node.js**: JavaScript runtime enviroment
 
 <br>
 
