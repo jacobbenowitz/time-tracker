@@ -42,7 +42,7 @@
       },
       "post": {
         "summary": "Create time entry",
-        "description": "Create a new time entry.",
+        "description": "Create a new time entry. The start_time and end_time must be in Timestamp format (i.e. 2017-12-31T23:59:59.999Z)  ",
         "produces": ["application/json"],
         "consumes": ["application/json"],
         "parameters": [
@@ -128,7 +128,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "time-entries object",
+            "description": "Update any or all of the following parameters: title, description, status, start_time, end_time",
             "required": true,
             "schema": {
               "type": "object",
@@ -507,7 +507,8 @@
       "type": "object",
       "properties": {
         "user_id": {
-          "type": "integer"
+          "type": "integer",
+          "example": 1
         },
         "title": {
           "type": "string"
@@ -516,13 +517,16 @@
           "type": "string"
         },
         "status": {
-          "type": "string"
+          "type": "string",
+          "example": "pending"
         },
         "start_time": {
-          "type": "string"
+          "type": "string",
+          "example": "2023-12-30T22:59:59.999Z"
         },
         "end_time": {
-          "type": "string"
+          "type": "string",
+          "example": "2023-12-31T23:59:59.999Z"
         }
       }
     },
@@ -615,7 +619,16 @@
           "type": "string"
         },
         "status": {
-          "type": "string"
+          "type": "string",
+          "example": "done"
+        },
+        "start_time": {
+          "type": "string",
+          "example": "2023-12-30T22:59:59.999Z"
+        },
+        "end_time": {
+          "type": "string",
+          "example": "2023-12-31T23:59:59.999Z"
         }
       }
     },
